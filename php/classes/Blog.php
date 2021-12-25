@@ -19,8 +19,7 @@
       global $mysqli;
       //echo "INSERT INTO `articles`(`title`, `content`, `author`) VALUES ('$title', '$content', '$author')";
       $result = $mysqli->query("INSERT INTO `articles`(`title`, `content`, `author`) VALUES ('$title', '$content', '$author')");
-      header('Location: /');
-      exit;
+      exit(json_encode(['result'=>'success']));
     }
   }
 ?>
