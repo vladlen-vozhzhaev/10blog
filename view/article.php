@@ -4,6 +4,7 @@
             <div class="col-md-10 col-lg-8 col-xl-7" id='content'>
                 
             </div>
+            <div class="col-md-10 col-lg-8 col-xl-7" id="editBtn"></div>
         </div>
     </div>
 </article>
@@ -19,4 +20,12 @@
       title.innerText = result.title;
       content.innerHTML = result.content;
     })
+
+  fetch('/getCurrentUser')
+      .then(response=>response.json())
+      .then(result=>{
+          if(result.id != null){
+              editBtn.innerHTML = `<a href="/changeArticle/${id}">[Редактировать]</a>`;
+          }
+      })
 </script>

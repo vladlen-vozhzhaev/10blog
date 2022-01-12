@@ -1,16 +1,16 @@
 <form action="/addArticle" method="post" onsubmit="sendForm(this); return false;">
-  <div class="mb-3">
-    <input type="text" name="title" class="form-control" placeholder="Заголовок статьи">
-  </div>
-  <div class="mb-3">
-    <textarea id="sample" class="form-control" placeholder="Текст статьи"></textarea>
-  </div>
-  <div class="mb-3">
-    <input type="text" name="author" class="form-control" placeholder="Автор">
-  </div>
-  <div class="mb-3">
-    <input type="submit" class="form-control btn btn-primary" value="Добавить статью">
-  </div>
+    <div class="mb-3">
+        <input type="text" name="title" class="form-control" placeholder="Заголовок статьи" id="inputTitle">
+    </div>
+    <div class="mb-3">
+        <textarea id="sample" class="form-control" placeholder="Текст статьи"></textarea>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="author" class="form-control" placeholder="Автор" id="inputAuthor">
+    </div>
+    <div class="mb-3">
+        <input type="submit" class="form-control btn btn-primary" value="Сохранить изменения">
+    </div>
 </form>
 
 <link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
@@ -31,31 +31,16 @@
         // Language global object (default: en)
         lang: SUNEDITOR_LANG['ru'],
         height: '25rem',
-        buttonList: [
-            ['undo', 'redo'],
-            ['font', 'fontSize', 'formatBlock'],
-            ['paragraphStyle', 'blockquote'],
-            ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
-            ['fontColor', 'hiliteColor', 'textStyle'],
-            ['removeFormat'],
-            '/', // Line break
-            ['outdent', 'indent'],
-            ['align', 'horizontalRule', 'list', 'lineHeight'],
-            ['table', 'link', 'image', 'video', 'audio' /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
-            /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-            ['fullScreen', 'showBlocks', 'codeView'],
-            ['preview', 'print'],
-            ['save', 'template'],
-            /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-        ]
     });
 
+    let id = location.pathname.split('/')[2];
+
     function sendForm(form){
-        console.log(form);
         const content = editor.getContents();
         let formData = new FormData(form);
+        formData.append('id', id);
         formData.append('content', content);
-        fetch('/addArticle',{
+        fetch('/changeArticle',{
             method: "POST",
             body: formData
         }).then(response=>response.json())
@@ -65,4 +50,17 @@
                 }
             })
     }
+
+
+    let formData = new FormData();
+    formData.append('id', id);
+    fetch('/getArticleById',{
+        method: "POST",
+        body: formData
+    }).then(response=>response.json())
+        .then(result=>{
+            inputTitle.value = result.title;
+            editor.setContents(result.content);
+            inputAuthor.value = result.author;
+        })
 </script>

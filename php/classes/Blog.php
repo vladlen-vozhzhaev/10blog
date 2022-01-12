@@ -21,5 +21,10 @@
       $result = $mysqli->query("INSERT INTO `articles`(`title`, `content`, `author`) VALUES ('$title', '$content', '$author')");
       exit(json_encode(['result'=>'success']));
     }
+    public static function changeArticle($id, $title, $content, $author){
+        global $mysqli;
+        $mysqli->query("UPDATE `articles` SET `title`='$title',`content`='$content',`author`='$author' WHERE `id`=$id");
+        return (json_encode(['result'=>'success']));
+    }
   }
 ?>

@@ -39,11 +39,15 @@
       }
     }
     public static function getCurrentUser(){
-      $user = [
-        "name"=>"Ivan",
-        "lastname"=>"Ivanov"
-      ];
-      return json_encode($user);
+        $username = $_SESSION['username'];
+        $lastname = $_SESSION['lastname'];
+        $id = $_SESSION['id'];
+        $user = [
+        "name"=>$username,
+        "lastname"=>$lastname,
+        "id"=>$id
+        ];
+        return json_encode($user);
     }
   }
 ?>
