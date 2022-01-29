@@ -4,9 +4,30 @@
   $mysqli = new mysqli('localhost', 'root', '', '10blog');
   require_once('php/classes/User.php');
   require_once('php/classes/Blog.php');
+  require_once('php/classes/simple_html_dom.php');
   $uri = $_SERVER['REQUEST_URI'];
   $uri = explode('/', $uri);
-  
+
+  function base64_to_image($base64_string){
+      // split the string on commas
+      // $data[ 0 ] == "data:image/png;base64"
+      // $data[ 1 ] == <actual base64 string>
+      $data = explode( ',', $base64_string );
+      $image_info = getimagesize($base64_string);
+      $extension = (isset($image_info["mime"]) ? explode('/', $image_info["mime"] )[1]: "");
+
+      $output_file = 'userfile/'.time().'.'.$extension;
+      $ifp = fopen( $output_file, 'xb' );
+
+      // we could add validation here with ensuring count( $data ) > 1
+      fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+
+      // clean up the file resource
+      fclose( $ifp );
+
+      return '/'.$output_file;
+  }
+
   if($uri[1] == 'reg'){
     $title = "Регистрация";
     $content = file_get_contents('view/reg.php');

@@ -17,6 +17,11 @@
     }
     public static function addArticle($title, $content, $author){
       global $mysqli;
+      $html = new simple_html_dom();
+      $html->load($content);
+      foreach($html->find('img') as $element)
+        $element->src = base64_to_image($element->src);
+      $content = $html->save();
       //echo "INSERT INTO `articles`(`title`, `content`, `author`) VALUES ('$title', '$content', '$author')";
       $result = $mysqli->query("INSERT INTO `articles`(`title`, `content`, `author`) VALUES ('$title', '$content', '$author')");
       exit(json_encode(['result'=>'success']));
